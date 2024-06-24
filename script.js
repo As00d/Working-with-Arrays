@@ -61,6 +61,23 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = '';
+  movements.forEach(function (mov, index) {
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+    const html = `
+    <div class="movements__row">
+      <div class="movements__type movements__type--${type}">
+            ${index + 1} ${type}
+      </div>
+      <div class="movements__value">${mov}</div>
+    </div>`;
+    
+    containerMovements.insertAdjacentHTML('afterbegin',html );
+  });
+};
+displayMovements(account1.movements);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -139,24 +156,23 @@ movements.forEach(function (movement, index, array) {
 });
 // Now a question comes to mind which method is better to traverse for the array, the forEach method is kind of clean and also we cant use break or continue statement so we have to traverse the entire array every time.
 
-
 // forEach methods on maps and sets - lets quickly revise maps and sets first
 
-// MAPS 
+// MAPS
 const currencies = new Map([
   ['USD', 'United States dollar'],
   ['EUR', 'Euro'],
   ['GBP', 'Pound sterling'],
 ]);
 
-currencies.forEach(function(val, key, map){
-console.log(`${val} : ${key}`);
-})
+currencies.forEach(function (val, key, map) {
+  console.log(`${val} : ${key}`);
+});
 
 // SETS
 // In set order in which elements are present does not matter because of which in set first two paramater are the value of set and the 3rd parameter is set itself. This was kept this way in order to avoid the confusion. The _ is a throwable parameter which is basically not needed
-const mySet = new Set(['a','b','c','d']);
+const mySet = new Set(['a', 'b', 'c', 'd']);
 
-mySet.forEach(function(val, _, set){
-console.log(val);
-})
+mySet.forEach(function (val, _, set) {
+  console.log(val);
+});
