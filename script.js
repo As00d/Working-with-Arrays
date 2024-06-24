@@ -68,9 +68,9 @@ const inputClosePin = document.querySelector('.form__input--pin');
 // const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-// Methods on array - arrays are basically objects and methods are basically function which can be called on it. Now why these methods are accessible to each array we create in later section but here we will cover some imp array methods
+// Methods on array - arrays are basically objects and methods are basically function which can be called on it. Now why these methods are accessible to each array we will learn in later section but here we will cover some imp array methods
 
-// 1. slice method - similar to what we saw in string section - negative value indicates give me last say we write -3 so give me ending 3 array value
+// 1. slice method - similar to what we saw in string section - negative value indicates give me last say we write -3 so give me ending 3 array value or we can say from last index start from -1
 
 let arr = ['a', 'b', 'c', 'd', 'e'];
 console.log(arr.slice(2));
@@ -115,6 +115,7 @@ console.log(crr[crr.length - 1]);
 // Now in es2022 we have a new way and this not only works with array but string also
 
 console.log(crr.at(-1));
+console.log(crr.at(3));
 
 // for each method to loop over the array elements
 const drr = [2, 34, 643, 656, 23, 23, 45, 67, 632];
@@ -129,7 +130,7 @@ arr.forEach(function (value, index, arr) {
 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
-movements.forEach(function (movement) {
+movements.forEach(function (movement, index, array) {
   if (movement > 0) {
     console.log(`Cash deposited in bank :${movement}`);
   } else {
@@ -153,9 +154,9 @@ console.log(`${val} : ${key}`);
 })
 
 // SETS
-
+// In set order in which elements are present does not matter because of which in set first two paramater are the value of set and the 3rd parameter is set itself. This was kept this way in order to avoid the confusion. The _ is a throwable parameter which is basically not needed
 const mySet = new Set(['a','b','c','d']);
 
-mySet.forEach(function(val){
+mySet.forEach(function(val, _, set){
 console.log(val);
 })
