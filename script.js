@@ -72,12 +72,32 @@ const displayMovements = function (movements) {
       </div>
       <div class="movements__value">${mov}</div>
     </div>`;
-    
-    containerMovements.insertAdjacentHTML('afterbegin',html );
+    containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
 displayMovements(account1.movements);
 
+// Computing usernames
+const usernameObject = function (accounts) {
+  accounts.forEach(function (account) {
+    account.username = account.owner
+      .toLowerCase()
+      .split(' ')
+      .map(elem => elem[0])
+      .join('');
+  });
+};
+usernameObject(accounts);
+console.log(accounts);
+
+// Calculating the overall balance
+const calcPrintBalance = function (movements) {
+  const balance = movements.reduce(function (acc, val) {
+    return acc + val;
+  }, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+calcPrintBalance(account1.movements);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -176,3 +196,138 @@ const mySet = new Set(['a', 'b', 'c', 'd']);
 mySet.forEach(function (val, _, set) {
   console.log(val);
 });
+// The introduction to map, reduce and filter method
+// Map method as name suggests map the array element with some value say map an array = [1,3,4,5,6] multiply 2 = [2,6,8,10,12]
+// map method also just like for each method helps us to loop over the array method but it returns a brand new array
+const euroToUsd = 1.1;
+const movementsUsd = movements.map(move => move * euroToUsd);
+
+// This is more of a functional programming paradigm
+const notArrow = movements.map(function (move) {
+  return move * euroToUsd;
+});
+
+console.log(movements);
+console.log(movementsUsd);
+console.log(notArrow);
+
+// Other way of doing this
+const movementsUsdfor = [];
+for (const mov of movements) {
+  movementsUsdfor.push(mov * euroToUsd);
+}
+
+console.log(movementsUsdfor);
+
+const newMovements = movements.map(function (movement) {
+  if (movement > 0) {
+    return `Cash deposited in bank :${movement}`;
+  } else {
+    return `Cash withdrawn from bank :${Math.abs(movement)}`;
+  }
+});
+console.log(newMovements);
+
+// filter method in array
+// So filter method basically filters the elements out of array, lets look at an example to understand the same
+const deposits = movements.filter(function (mov) {
+  return mov > 0;
+});
+console.log(movements);
+console.log(deposits);
+// using for of loop
+const forOfLoop = [];
+for (const val of movements) {
+  if (val > 0) {
+    forOfLoop.push(val);
+  }
+}
+console.log(deposits);
+// Now question is we can simply do the same using for of loop why to use this filter method ?? The answer to this is 1. The push going for functional programming and second we can chain different methods alongside which may not be possible for the normal way.
+
+const withdrawls = movements.filter(function (mov) {
+  return mov < 0;
+});
+console.log(withdrawls);
+
+// The reduce method - this method is responsible for reducing the array elements to a single value for eg say sum of the array elements
+console.log(movements);
+// acc is just like a snowball
+const remainingBalance = movements.reduce(function (acc, val) {
+  console.log(acc);
+  return acc + val;
+}, 0);
+// using arrow function
+const remainingBalanceArrow = movements.reduce((acc, val) => acc + val, 0);
+console.log(remainingBalanceArrow);
+
+console.log(remainingBalance);
+// lets do the same thing manually using for of loop
+let sum = 0;
+for (const val of movements) {
+  console.log(sum);
+  sum += val;
+}
+console.log(sum);
+
+console.log(movements);
+// Find maximum val of movements array
+const maxVal = movements.reduce(function (acc, val) {
+  return acc < val ? val : acc;
+}, movements[0]);
+// using arrow func
+const maxVal2 = movements.reduce(
+  (acc, val) => (acc < val ? val : acc),
+  movements[0]
+);
+// Coding challenge
+
+/* 
+Julia and Kate are doing a study on dogs. So each of them asked 5 dog owners about their dog's age, and stored the data into an array (one array for each). For now, they are just interested in knowing whether a dog is an adult or a puppy. A dog is an adult if it is at least 3 years old, and it's a puppy if it's less than 3 years old.
+
+Create a function 'checkDogs', which accepts 2 arrays of dog's ages ('dogsJulia' and 'dogsKate'), and does the following things:
+
+1. Julia found out that the owners of the FIRST and the LAST TWO dogs actually have cats, not dogs! So create a shallow copy of Julia's array, and remove the cat ages from that copied array (because it's a bad practice to mutate function parameters)
+2. Create an array with both Julia's (corrected) and Kate's data
+3. For each remaining dog, log to the console whether it's an adult ("Dog number 1 is an adult, and is 5 years old") or a puppy ("Dog number 2 is still a puppy 🐶")
+4. Run the function for both test datasets
+
+HINT: Use tools from all lectures in this section so far 😉
+
+TEST DATA 1: Julia's data [3, 5, 2, 12, 7], Kate's data [4, 1, 15, 8, 3]
+TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+
+const checkDogs = function (dogsJulia, dogsKate) {
+  // Part 1
+  const onlyDogsJulia = [...dogsJulia];
+  onlyDogsJulia.splice(0, 1);
+  onlyDogsJulia.splice(-2);
+
+  // Part 2
+  const combinedDogs = onlyDogsJulia.concat(dogsKate);
+  console.log(combinedDogs);
+
+  // Part 3
+  combinedDogs.forEach(function (val, index) {
+    if (val >= 3) {
+      console.log(
+        `Dog number ${index + 1} is an adult, and is ${val} years old`
+      );
+    } else {
+      console.log(
+        `Dog number ${index + 1} is an puppy, and is ${val} years old`
+      );
+    }
+  });
+};
+
+const dogsJulia = [3, 5, 2, 12, 7];
+const dogsKate = [4, 1, 15, 8, 3];
+checkDogs(dogsJulia, dogsKate);
+console.log(`----------TEST CASE 2 ----------`);
+const dogsJulia2 = [9, 16, 6, 8, 3];
+const dogsKate2 = [10, 5, 6, 1, 4];
+checkDogs(dogsJulia2, dogsKate2);
