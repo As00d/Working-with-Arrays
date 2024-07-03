@@ -70,7 +70,7 @@ const displayMovements = function (movements) {
       <div class="movements__type movements__type--${type}">
             ${index + 1} ${type}
       </div>
-      <div class="movements__value">${mov}</div>
+      <div class="movements__value">${mov} €</div>
     </div>`;
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
@@ -95,9 +95,32 @@ const calcPrintBalance = function (movements) {
   const balance = movements.reduce(function (acc, val) {
     return acc + val;
   }, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${balance}€`;
 };
 calcPrintBalance(account1.movements);
+
+// Calculating the incoming, outgoing and interest values
+// Incoming is sum of all deposits
+
+const calcDisplaySummary = function (movements) {
+  // Incoming deposits
+  labelSumIn.textContent = `${movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov)}€`;
+  // Outgoing money
+  labelSumOut.textContent = `${Math.abs(
+    movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov)
+  )}€`;
+  // Interest money - Bank pays an interest of 1.2% each time a money is deposited
+  const sum = movements
+    .filter(mov => mov > 0)
+    .map(mov => (mov * 1.2) / 100)
+    .filter(mov => mov >= 1)
+    .reduce((acc, mov) => acc + mov);
+  labelSumInterest.textContent = `${sum}€`;
+};
+
+calcDisplaySummary(account1.movements);
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -280,6 +303,19 @@ const maxVal2 = movements.reduce(
   (acc, val) => (acc < val ? val : acc),
   movements[0]
 );
+// The power of chaining these methods so uptil now we were using these methods all alone either calling filter, reduce or map method but all alone not together but we can also chain these methods together
+
+console.log(movements);
+// map these values to euro
+const result = movements
+  .map(mov => mov * 1.1)
+  .filter(mov => mov > 0)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(result);
+
+// Remarks on chaining
+// 1. We should not over use chaining , chaining can cause performance issue
+// 2. we should be careful when we use chaining methods should not use methods which mutate the original array
 // Coding challenge
 
 /* 
@@ -357,9 +393,13 @@ const calcAverageHumanAge = function (ages) {
   // Part 2 -> Using filter method to filter these dogs
   const humanAgeOfDogs = dogAgeToHumanAge.filter(humanAge => humanAge >= 18);
   // Part 3 -> average of all adult dogs
-  const averageAge = humanAgeOfDogs.reduce((acc, age) => acc + age, 0)/humanAgeOfDogs.length;
-  console.log(averageAge);
+  const averageAge = humanAgeOfDogs.reduce(
+    (acc, age, i, arr) => acc + age / arr.length,
+    0
+  );
+  return averageAge;
+  // Another way is divide the array length from each element so changing the above accordingly
 };
 
-calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
-calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
+console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
