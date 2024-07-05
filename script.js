@@ -1,9 +1,9 @@
-'use strict';
-
-/////////////////////////////////////////////////
-/////////////////////////////////////////////////
 // BANKIST APP
 
+
+/////////////////////////////////////////////////
+'use strict';
+/////////////////////////////////////////////////
 // Data
 const account1 = {
   owner: 'Jonas Schmedtmann',
@@ -75,7 +75,6 @@ const displayMovements = function (movements) {
     containerMovements.insertAdjacentHTML('afterbegin', html);
   });
 };
-displayMovements(account1.movements);
 
 // Computing usernames
 const usernameObject = function (accounts) {
@@ -97,30 +96,59 @@ const calcPrintBalance = function (movements) {
   }, 0);
   labelBalance.textContent = `${balance}€`;
 };
-calcPrintBalance(account1.movements);
 
 // Calculating the incoming, outgoing and interest values
 // Incoming is sum of all deposits
 
-const calcDisplaySummary = function (movements) {
+const calcDisplaySummary = function (account) {
   // Incoming deposits
-  labelSumIn.textContent = `${movements
+  labelSumIn.textContent = `${account.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov)}€`;
   // Outgoing money
   labelSumOut.textContent = `${Math.abs(
-    movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov)
+    account.movements.filter(mov => mov < 0).reduce((acc, mov) => acc + mov)
   )}€`;
   // Interest money - Bank pays an interest of 1.2% each time a money is deposited
-  const sum = movements
+  const sum = account.movements
     .filter(mov => mov > 0)
-    .map(mov => (mov * 1.2) / 100)
+    .map(mov => (mov * account.interestRate) / 100)
     .filter(mov => mov >= 1)
     .reduce((acc, mov) => acc + mov);
   labelSumInterest.textContent = `${sum}€`;
 };
 
-calcDisplaySummary(account1.movements);
+// Implementing login
+let currentAccount;
+btnLogin.addEventListener('click', function (e) {
+  // Prevent form from submitting
+  e.preventDefault();
+  console.log('Login');
+  currentAccount = accounts.find(function (acc) {
+    return acc.username === inputLoginUsername.value;
+  });
+  // Now we first need to check if current account exists or not
+  console.log('current account' + currentAccount);
+  console.log('inputLoginPin.value ' + inputLoginPin.value);
+  
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    //welcome message 
+    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}!`;
+    // display UI
+    containerApp.style.opacity='100%'
+    // Removing values from input field and blur the focus
+    inputLoginUsername.value = inputLoginPin.value = '';
+    inputLoginPin.blur();
+    // Display balance
+    calcPrintBalance(currentAccount.movements);
+    // Display summary 
+    calcDisplaySummary(currentAccount);
+    // displayMovements 
+    displayMovements(currentAccount.movements);
+    // start/restart the timeout login
+  }
+});
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
@@ -316,6 +344,27 @@ console.log(result);
 // Remarks on chaining
 // 1. We should not over use chaining , chaining can cause performance issue
 // 2. we should be careful when we use chaining methods should not use methods which mutate the original array
+
+// Topic name => find method
+const firstWithdrawl = movements.find(function (mov) {
+  return mov < 0;
+});
+console.log(firstWithdrawl);
+
+const testArray = [1, 2, 3, 4];
+const firstNegativeVal = testArray.find(function (mov) {
+  return mov < 0;
+});
+console.log(firstNegativeVal);
+// If the element value is not found it will return the undefined
+
+const objectReturnedFromArray = accounts.find(function (acc) {
+  return acc.owner === 'Jessica Davis';
+});
+
+console.log(objectReturnedFromArray);
+// Find method is kind of similar to filter method but yet different find method basically just returns the very 1st array element which satisfies the condition whereas filter method returns an array.
+
 // Coding challenge
 
 /* 
@@ -336,7 +385,7 @@ TEST DATA 2: Julia's data [9, 16, 6, 8, 3], Kate's data [10, 5, 6, 1, 4]
 GOOD LUCK 😀
 */
 
-const checkDogs = function (dogsJulia, dogsKate) {
+function checkDogs(dogsJulia, dogsKate) {
   // Part 1
   const onlyDogsJulia = [...dogsJulia];
   onlyDogsJulia.splice(0, 1);
@@ -358,7 +407,7 @@ const checkDogs = function (dogsJulia, dogsKate) {
       );
     }
   });
-};
+}
 
 const dogsJulia = [3, 5, 2, 12, 7];
 const dogsKate = [4, 1, 15, 8, 3];
