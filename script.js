@@ -1,6 +1,5 @@
 // BANKIST APP
 
-
 /////////////////////////////////////////////////
 'use strict';
 /////////////////////////////////////////////////
@@ -90,13 +89,19 @@ usernameObject(accounts);
 console.log(accounts);
 
 // Calculating the overall balance
-const calcPrintBalance = function (movements) {
-  const balance = movements.reduce(function (acc, val) {
+const calcPrintBalance = function (acc) {
+  acc.balance = acc.movements.reduce(function (acc, val) {
     return acc + val;
   }, 0);
-  labelBalance.textContent = `${balance}€`;
+
+  labelBalance.textContent = `${acc.balance}€`;
 };
 
+const displayUI = function (acc) {
+  calcPrintBalance(acc);
+  calcDisplaySummary(acc);
+  displayMovements(acc.movements);
+};
 // Calculating the incoming, outgoing and interest values
 // Incoming is sum of all deposits
 
@@ -130,25 +135,66 @@ btnLogin.addEventListener('click', function (e) {
   // Now we first need to check if current account exists or not
   console.log('current account' + currentAccount);
   console.log('inputLoginPin.value ' + inputLoginPin.value);
-  
+
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
-    //welcome message 
-    labelWelcome.textContent = `Welcome back, ${currentAccount.owner.split(' ')[0]}!`;
+    //welcome message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(' ')[0]
+    }!`;
     // display UI
-    containerApp.style.opacity='100%'
+    containerApp.style.opacity = '100%';
     // Removing values from input field and blur the focus
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    // Display balance
-    calcPrintBalance(currentAccount.movements);
-    // Display summary 
-    calcDisplaySummary(currentAccount);
-    // displayMovements 
-    displayMovements(currentAccount.movements);
+    displayUI(currentAccount);
     // start/restart the timeout login
   }
 });
 
+// Implementing transfer money
+btnTransfer.addEventListener('click', function (e) {
+  e.preventDefault();
+  console.log('Request for money tranfer is initiated');
+
+  // 1. Check if the account we want to transfer money to is valid or not
+  const amount = Number(inputTransferAmount.value);
+  const receiverAccount = accounts.find(
+    account =>
+      account.username === inputTransferTo.value &&
+      account.username != currentAccount.username
+  );
+  console.log(amount);
+  console.log(receiverAccount);
+
+  // Checking if accountToTransferMoney and balance is appropriate
+  if (
+    amount > 0 &&
+    currentAccount.balance >= amount &&
+    receiverAccount?.username !== currentAccount.username
+  ) {
+    currentAccount.movements.push(-amount);
+    receiverAccount.movements.push(amount);
+
+    displayUI(currentAccount);
+  }
+  inputTransferAmount.value = '';
+  inputTransferTo.value = '';
+});
+
+// Implementing loan feature
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  console.log(
+    'Request loan is initiated and amount money is' + inputLoanAmount.value
+  );
+  const amountRequested = Number(inputLoanAmount.value);
+  if (amountRequested > 0) {
+    currentAccount.movements.push(amountRequested);
+    console.log(currentAccount);
+    displayMovements(currentAccount.movements)
+  }
+  inputLoanAmount.value='';
+});
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
