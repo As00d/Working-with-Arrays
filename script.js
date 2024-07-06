@@ -185,13 +185,18 @@ btnTransfer.addEventListener('click', function (e) {
 btnLoan.addEventListener('click', function (e) {
   e.preventDefault();
   console.log(
-    'Request loan is initiated and amount money is' + inputLoanAmount.value
+    'Request loan is initiated and amount money is :' + inputLoanAmount.value
   );
+  // Implementing the condition for approving loan based on flow chart
   const amountRequested = Number(inputLoanAmount.value);
-  if (amountRequested > 0) {
+  const isLoanGranted = currentAccount.movements.some(
+    mov => mov > 0 && mov > 0.1 * amountRequested
+  );
+  console.log(isLoanGranted);
+  if (amountRequested > 0 && isLoanGranted) {
     currentAccount.movements.push(amountRequested);
     console.log(currentAccount);
-    displayMovements(currentAccount.movements);
+    displayUI(currentAccount);
   }
   inputLoanAmount.value = '';
 });
@@ -207,9 +212,9 @@ btnClose.addEventListener('click', function (e) {
   if (currentAccount.username === userName && currentAccount.pin === pin) {
     console.log('Closing account in process');
     const accountToClose = accounts.findIndex(acc => acc.username === userName);
-    accounts.splice(accountToClose,1);
+    accounts.splice(accountToClose, 1);
     // Now as soon as an account is closed we need to go back to login screen
-    inputCloseUsername.value = inputClosePin.value ='';
+    inputCloseUsername.value = inputClosePin.value = '';
     containerApp.style.opacity = '0';
   }
 });
@@ -534,3 +539,19 @@ const calcAverageHumanAgeArrow = ages =>
 
 console.log(calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]));
 console.log(calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]));
+
+// Other array methods - some and every
+console.log(movements);
+// we already know in order to check if any element present in array or not we can use includes method but in this case it is a strict equality what if we want to return true or false based on some condition ? Then we have some method
+console.log(movements.includes(-130));
+
+const anyDeposit = movements.some(function (mov) {
+  return mov > 0;
+});
+console.log(anyDeposit);
+// May be similar to filter method but filter, map method gives us an array not a boolean value.
+
+// EVERY method - kind of similar if every element within the array satisfies the condition then output is true
+const vrr = [2,3,-23,5,5,7];
+const everyElementPositive = vrr.every(val => val > 0);
+console.log(everyElementPositive);
