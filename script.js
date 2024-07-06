@@ -191,9 +191,27 @@ btnLoan.addEventListener('click', function (e) {
   if (amountRequested > 0) {
     currentAccount.movements.push(amountRequested);
     console.log(currentAccount);
-    displayMovements(currentAccount.movements)
+    displayMovements(currentAccount.movements);
   }
-  inputLoanAmount.value='';
+  inputLoanAmount.value = '';
+});
+
+// Implementing close account feature - You can only close your own account - when closing an account we need to take care of few things 1. username and password should match - once confirmed we simply slice of the element from accounts array that's it.
+
+btnClose.addEventListener('click', function (e) {
+  console.log('Button close is printed');
+  e.preventDefault();
+  const userName = inputCloseUsername.value;
+  const pin = Number(inputClosePin.value);
+  // Check if username and password is correct as per the currentAccount
+  if (currentAccount.username === userName && currentAccount.pin === pin) {
+    console.log('Closing account in process');
+    const accountToClose = accounts.findIndex(acc => acc.username === userName);
+    accounts.splice(accountToClose,1);
+    // Now as soon as an account is closed we need to go back to login screen
+    inputCloseUsername.value = inputClosePin.value ='';
+    containerApp.style.opacity = '0';
+  }
 });
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
