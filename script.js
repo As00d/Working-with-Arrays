@@ -552,6 +552,25 @@ console.log(anyDeposit);
 // May be similar to filter method but filter, map method gives us an array not a boolean value.
 
 // EVERY method - kind of similar if every element within the array satisfies the condition then output is true
-const vrr = [2,3,-23,5,5,7];
+const vrr = [2, 3, -23, 5, 5, 7];
 const everyElementPositive = vrr.every(val => val > 0);
 console.log(everyElementPositive);
+
+// flat and flatMap method of array
+const flatArr = [1, 2, 3, [4, [5, 6]], [7, 8, 9]];
+console.log(flatArr.flat(2));
+// flat method for array basically flattens the array to level 1 what if you have more nested array lets try it
+// so the output of the above will be like [1, 2, 3, 4, Array(2), 7, 8, 9] which means by default the default map depth is 1 what if we want to flat this also. Then we have to pass in the argument.
+// let us take another eg say we want to calculate the overall balance for the bankist application
+
+const movementsArray = accounts
+  .map(mov => mov.movements)
+  .flat()
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(movementsArray);
+// Now in everyday programming of js the developers found it is quite needed to use flat and map together so they came up with method called flat map so we can map and flat the elements together
+const movementsArray2 = accounts
+  .flatMap(mov => mov.movements)
+  .reduce((acc, mov) => acc + mov, 0);
+console.log(movementsArray);
+// The point to note in here is we have flatMap only 1 level deep so in case we need it to flat more level then we need to have it separately.
