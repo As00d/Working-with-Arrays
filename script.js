@@ -60,9 +60,10 @@ const inputLoanAmount = document.querySelector('.form__input--loan-amount');
 const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sorted) {
+  const movs = sorted ? movements.slice().sort((a, b) => a - b) : movements;
   containerMovements.innerHTML = '';
-  movements.forEach(function (mov, index) {
+  movs.forEach(function (mov, index) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
     <div class="movements__row">
@@ -217,6 +218,14 @@ btnClose.addEventListener('click', function (e) {
     inputCloseUsername.value = inputClosePin.value = '';
     containerApp.style.opacity = '0';
   }
+});
+// Sorting the array
+let sorted = false;
+btnSort.addEventListener('click', function (e) {
+  e.preventDefault();
+  console.log('Button is clicked');
+  displayMovements(currentAccount.movements, !sorted);
+  sorted = !sorted;
 });
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -574,3 +583,17 @@ const movementsArray2 = accounts
   .reduce((acc, mov) => acc + mov, 0);
 console.log(movementsArray);
 // The point to note in here is we have flatMap only 1 level deep so in case we need it to flat more level then we need to have it separately.
+
+// Sorting of array in JS
+// In order to sort the array in JS it is quite easy let us look at an eg and undertand how its done
+const test = ['bni', 'anki', 'albin', 'bishu', 'ragav', 'vinisai'];
+console.log(test.sort());
+// Sort method mutates the original array just like reverse method
+console.log(test);
+// Sorting method works on strings but when we try to sort the numeric values it doesnt
+const test2 = [-23, -56, -1, 89, 34, 20, 45];
+// Sorting in ascending
+console.log(test2.sort((a, b) => a - b));
+// Sorting in descending
+console.log(test2.sort((a, b) => b - a));
+// So to sort the numeric value we have to pass a comparison operator
