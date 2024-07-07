@@ -597,3 +597,32 @@ console.log(test2.sort((a, b) => a - b));
 // Sorting in descending
 console.log(test2.sort((a, b) => b - a));
 // So to sort the numeric value we have to pass a comparison operator
+
+// Topic name - How to create an array programatically, so uptil now we have learnt these ways of creating an array like const arr = [], const brr = new Array([1,2,3,4,5]), we have other ways also to create an array
+
+// The empty array and fill method used together
+console.log([2,3,5,6,2,0]);
+console.log(new Array([2,3,4,3,3]));
+
+const r = new Array(9).fill(0);
+// creating an empty array and filling it with 0 
+console.log(r);
+//  we can also use fill method to fill and already existing array, fill method also mutates the original array
+const testArr = [1,2,3,4,5,6,7,8];
+console.log(testArr.fill(0,0,3));
+
+// What if we want to create an array programatically like const arr = [1,2,3,4,5,6,7,8,9]; how can we achieve the same ?
+// The from method takes two parameter 1. length (length of the desired array as an object, callback function)
+const x = Array.from({length: 10}, ()=> 1);
+console.log(x);
+const z = Array.from({length:20}, (_,i)=>i+1);
+console.log(z);
+// Challenge - create an array with 100 dice roll
+const diceRoll = Array.from({length:100}, ()=> Math.floor(Math.random()*6)+1);
+console.log(diceRoll);
+
+// A more useful general use of Array from method
+const valueFromUI = labelBalance.addEventListener('click',function(){
+  const movFromUI = Array.from(document.querySelectorAll('.movements__value'));
+  console.log(movFromUI.map(mov => Number(mov.textContent.replace('€',''))));
+})
