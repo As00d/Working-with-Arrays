@@ -601,28 +601,104 @@ console.log(test2.sort((a, b) => b - a));
 // Topic name - How to create an array programatically, so uptil now we have learnt these ways of creating an array like const arr = [], const brr = new Array([1,2,3,4,5]), we have other ways also to create an array
 
 // The empty array and fill method used together
-console.log([2,3,5,6,2,0]);
-console.log(new Array([2,3,4,3,3]));
+console.log([2, 3, 5, 6, 2, 0]);
+console.log(new Array([2, 3, 4, 3, 3]));
 
 const r = new Array(9).fill(0);
-// creating an empty array and filling it with 0 
+// creating an empty array and filling it with 0
 console.log(r);
 //  we can also use fill method to fill and already existing array, fill method also mutates the original array
-const testArr = [1,2,3,4,5,6,7,8];
-console.log(testArr.fill(0,0,3));
+const testArr = [1, 2, 3, 4, 5, 6, 7, 8];
+console.log(testArr.fill(4, 0, 3));
 
 // What if we want to create an array programatically like const arr = [1,2,3,4,5,6,7,8,9]; how can we achieve the same ?
 // The from method takes two parameter 1. length (length of the desired array as an object, callback function)
-const x = Array.from({length: 10}, ()=> 1);
+const x = Array.from({ length: 10 }, () => 1);
 console.log(x);
-const z = Array.from({length:20}, (_,i)=>i+1);
+const z = Array.from({ length: 20 }, (_, i) => i + 1);
 console.log(z);
 // Challenge - create an array with 100 dice roll
-const diceRoll = Array.from({length:100}, ()=> Math.floor(Math.random()*6)+1);
+const diceRoll = Array.from(
+  { length: 100 },
+  () => Math.floor(Math.random() * 6) + 1
+);
 console.log(diceRoll);
 
 // A more useful general use of Array from method
-const valueFromUI = labelBalance.addEventListener('click',function(){
+const valueFromUI = labelBalance.addEventListener('click', function () {
   const movFromUI = Array.from(document.querySelectorAll('.movements__value'));
-  console.log(movFromUI.map(mov => Number(mov.textContent.replace('€',''))));
-})
+  console.log(movFromUI.map(mov => Number(mov.textContent.replace('€', ''))));
+});
+
+// Array methods practise
+
+// 1. How much total deposits is done till now in bank across all the bank
+const sumOfDeposit = accounts
+  .flatMap(acc => acc.movements)
+  .filter(val => val > 0)
+  .reduce((acc, val) => acc + val, 0);
+
+console.log(sumOfDeposit);
+
+// 2. How many deposits is there in bank for atleast 1000$
+
+const minimumSum = accounts
+  .flatMap(acc => acc.movements)
+  .filter(val => val >= 1000).length;
+
+console.log(minimumSum);
+
+// how to achieve the same using reduce method
+
+const minimumSumReduce = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((acc, val) => (val >= 1000 ? (acc = acc + 1) : acc), 0);
+
+console.log(minimumSumReduce);
+// Now one might think of using acc++ instead of acc but this is a postfix operator so it do increment the value but return the original value. Let us take an eg for the same
+let p = 9;
+console.log(p++);
+console.log(p);
+
+// 3. create return an object using reduce method { deposit: amount1, withdrawal}
+
+const depositWithdrawal = accounts
+  .flatMap(acc => acc.movements)
+  .reduce(
+    (acc, val) => {
+      val > 0 ? (acc.deposit += val) : (acc.withdrawal += val);
+      return acc;
+    },
+    { deposit: 0, withdrawal: 0 }
+  );
+console.log(depositWithdrawal);
+
+// Coding Challenge #4
+
+/* 
+Julia and Kate are still studying dogs, and this time they are studying if dogs are eating too much or too little.
+Eating too much means the dog's current food portion is larger than the recommended portion, and eating too little is the opposite.
+Eating an okay amount means the dog's current food portion is within a range 10% above and 10% below the recommended portion (see hint).
+
+1. Loop over the array containing dog objects, and for each dog, calculate the recommended food portion and add it to the object as a new property. Do NOT create a new array, simply loop over the array. Forumla: recommendedFood = weight ** 0.75 * 28. (The result is in grams of food, and the weight needs to be in kg)
+2. Find Sarah's dog and log to the console whether it's eating too much or too little. HINT: Some dogs have multiple owners, so you first need to find Sarah in the owners array, and so this one is a bit tricky (on purpose) 🤓
+3. Create an array containing all owners of dogs who eat too much ('ownersEatTooMuch') and an array with all owners of dogs who eat too little ('ownersEatTooLittle').
+4. Log a string to the console for each array created in 3., like this: "Matilda and Alice and Bob's dogs eat too much!" and "Sarah and John and Michael's dogs eat too little!"
+5. Log to the console whether there is any dog eating EXACTLY the amount of food that is recommended (just true or false)
+6. Log to the console whether there is any dog eating an OKAY amount of food (just true or false)
+7. Create an array containing the dogs that are eating an OKAY amount of food (try to reuse the condition used in 6.)
+8. Create a shallow copy of the dogs array and sort it by recommended food portion in an ascending order (keep in mind that the portions are inside the array's objects)
+
+HINT 1: Use many different tools to solve these challenges, you can use the summary lecture to choose between them 😉
+HINT 2: Being within a range 10% above and below the recommended portion means: current > (recommended * 0.90) && current < (recommended * 1.10). Basically, the current portion should be between 90% and 110% of the recommended portion.
+
+TEST DATA:
+const dogs = [
+  { weight: 22, curFood: 250, owners: ['Alice', 'Bob'] },
+  { weight: 8, curFood: 200, owners: ['Matilda'] },
+  { weight: 13, curFood: 275, owners: ['Sarah', 'John'] },
+  { weight: 32, curFood: 340, owners: ['Michael'] }
+];
+
+GOOD LUCK 😀
+*/
